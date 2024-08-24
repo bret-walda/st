@@ -126,6 +126,8 @@ typedef struct {
 typedef struct {
 	int row;      /* nb row */
 	int col;      /* nb col */
+	Line *line;   /* screen */
+	Line *alt;    /* alternate screen */
 	LineBuffer screen[2]; /* screen and alternate screen */
 	int linelen;  /* allocated line length */
 	int *dirty;   /* dirtyness of lines */
@@ -1080,6 +1082,10 @@ tnew(int col, int row)
 void
 tswapscreen(void)
 {
+	Line *tmp = term.line;
+
+	term.line = term.alt;
+	term.alt = tmp;
 	term.mode ^= MODE_ALTSCREEN;
 	tfulldirt();
 }
